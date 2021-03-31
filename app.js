@@ -1,64 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
+const db = require('./db_modules/db_users');
 
-let db = new sqlite3.Database('./db/users.db', (err) => {
-    if (err) {
-        console.log(err.message);
-    }
-    console.log('Connected to the users database.');
-});
+db.createUserTable();
+db.insertUser('test', 'test', 'test@test');
+db.getUsers();
+db.dropUsersTable();
 
-function createUserTable(db) {
-    db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT NOT NULL,
-                hash TEXT NOT NULL,
-                email TEXT NOT NULL)`
-            )
-    });
-}
-
-async function insertUser(db, username, hash, email) {
-    db.serialize(() => {
-        db.run(`INSERT INTO users(username, hash, email) 
-        VALUES (?, ?, ?)`, [username, hash, email], (err) => {
-            if (err) {
-                console.log(err.message);
-                throw err;
-            }
-        });
-    });
-}
-
-function getUsers(db) {
-    db.serialize(() => {
-        db.all(`SELECT * FROM users`, [], (err, rows) => {
-            if (err) {
-                console.log(err.message);
-                throw err;
-            }
-            console.log(rows);
-        });
-    })
-}
-
-function dropUsersTable(db) {
-    db.serialize(() => {
-        db.all('DROP TABLE users', (err, res) => {
-            if(err) {
-                console.log(err.message);
-                throw err;
-            }
-        })
-    })
-}
-
-createUserTable(db);
-insertUser(db, 'test', 'test', 'test@test');
-getUsers(db);
-dropUsersTable(db);
 const app = express();
 
 app.use(express.json());
