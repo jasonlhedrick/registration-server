@@ -1,9 +1,11 @@
 {
+  "author": {"name": "Jason Hedrick"},
   "scripts": {
     "start": "node app.js",
     "server": "nodemon app.js"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jwt": "^0.2.0",

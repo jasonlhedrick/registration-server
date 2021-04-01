@@ -1,12 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+
 const db = require('./db_modules/db_users');
-
-db.createUserTable();
-db.insertUser('test', 'test', 'test@test');
-db.getUsers();
-db.dropUsersTable();
-
 const app = express();
 
 app.use(express.json());
@@ -23,9 +19,21 @@ app.get('/user:id', async (req, res) => {
 
 });
 
-app.post('/user', async (req, res) => {
+app.post('/user', (req, res) => {
     // Get the user information off the request handler
     const user = req.body;
+
+    if (!(user.username && user.password && user.email)) 
+    {
+        res.status(400).json({'error': 'Please ensure registrations contain a username password and email.'});
+    }
+    else {
+        bcrypt.hash(user.password, 12)
+        .then(result => {
+            user.password = result;
+            db.insertUser(req, res, user);
+        });
+    }
 });
 
 app.put('/user:id', async (req, res) => {
