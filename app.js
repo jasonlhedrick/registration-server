@@ -31,7 +31,7 @@ app.post('/user', (req, res) => {
         bcrypt.hash(user.password, 12)
         .then(result => {
             user.password = result;
-            db.insertUser(req, res, user);
+            db.insertUser(res, user);
         });
     }
 });

@@ -11,7 +11,7 @@ function createUserTable() {
     });
 }
 
-function insertUser(req, res, user) {
+function insertUser(res, user) {
     db.run(`INSERT INTO users(username, hash, email) 
         VALUES (?, ?, ?)`, [user.username, user.password, user.email], async(error, result) => {
             if(error) {
