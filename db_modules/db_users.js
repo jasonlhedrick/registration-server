@@ -1,4 +1,5 @@
 const db = require('./db_config');
+const token = require('../jwt/tokens');
 
 function createUserTable() {
     db.serialize(() => {
@@ -18,7 +19,7 @@ function insertUser(res, user) {
                 res.status(400).json({'error': error.message});
             }
             else {
-                res.status(200).json({'msg': 'User successfully registered.'});
+                res.status(200).json({token: token.signToken(1), 'msg': 'User successfully registered.'});
             }
         });
 }
