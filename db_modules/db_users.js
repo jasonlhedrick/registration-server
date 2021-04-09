@@ -14,12 +14,12 @@ function createUserTable() {
 
 function insertUser(res, user) {
     db.run(`INSERT INTO users(username, hash, email) 
-        VALUES (?, ?, ?)`, [user.username, user.password, user.email], async(error, result) => {
+        VALUES (?, ?, ?)`, [user.username, user.password, user.email], function (error, result) {
             if(error) {
                 res.status(400).json({'error': error.message});
             }
             else {
-                res.status(200).json({token: token.signToken(1), 'msg': 'User successfully registered.'});
+                res.status(200).json({token: token.signToken(this.changes.lastID), 'msg': 'User successfully registered.'});
             }
         });
 }
