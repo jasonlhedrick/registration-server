@@ -2,14 +2,12 @@ const db = require('./db_config');
 const token = require('../jwt/tokens');
 
 function createUserTable() {
-    db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
-                hash TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL)`
-            )
-    });
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            hash TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL)`
+        )
 }
 
 function insertUser(res, user) {
@@ -25,7 +23,6 @@ function insertUser(res, user) {
 }
 
 function getUsers() {
-    db.serialize(() => {
         db.all(`SELECT * FROM users`, (err, rows) => {
             if (err) {
                 console.log(err.message);
@@ -33,18 +30,15 @@ function getUsers() {
             }
             console.log(rows);
         });
-    })
 }
 
 function dropUsersTable() {
-    db.serialize(() => {
         db.all('DROP TABLE users', (err, res) => {
             if(err) {
                 console.log(err.message);
                 throw err;
             }
         })
-    })
 }
 
 module.exports = {
